@@ -1,0 +1,4 @@
+dist/*
+esnext/*
+node_modules/*
+.swc
