@@ -13,26 +13,26 @@ npm i gas-html
 ```
 
 For Browser Module:
-`unpkg.com/gas-html@0.0.1/dist/es2015/index.js`
+`unpkg.com/gas-html@latest/dist/es2015/index.js`
 
 ```html
 <script
   type="module"
-  src="unpkg.com/gas-html@0.0.1/dist/es2015/index.js"
+  src="unpkg.com/gas-html@latest/dist/es2015/index.js"
 ></script>
 ```
 
 or
 
 ```js
-import {h, span,...} from 'unpkg.com/gas-html@0.0.1/dist/es2015/index.js'
+import {h, span,...} from 'unpkg.com/gas-html@latest/dist/es2015/index.js'
 ```
 
 For Browser with Module Syntax:
-`unpkg.com/gas-html@0.0.1/dist/es5/index.js`
+`unpkg.com/gas-html@latest/dist/es5/index.js`
 
 ```html
-<script src="unpkg.com/gas-html@0.0.1/dist/es5/index.js"></script>
+<script src="unpkg.com/gas-html@latest/dist/es5/index.js"></script>
 ```
 
 ## Basic Syntax
