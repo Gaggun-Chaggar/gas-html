@@ -1,0 +1,1 @@
+tsc --target esnext --module esnext --outDir ./dist/esnext

@@ -1,0 +1,37 @@
+{
+  "name": "component-creator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/esnext/index.js",
+  "esnext": "dist/esnext/index.js",
+  "module": "dist/esnext/index.js",
+  "types": "dist/esnext/index.d.ts",
+  "files": [
+    "./dist"
+  ],
+  "scripts": {
+    "test": "jest",
+    "format": "prettier --write src/**/*.ts",
+    "build-es2015": "./scripts/build.es2015.sh",
+    "build-esnext": "./scripts/build.esnext.sh",
+    "build-es5": "./scripts/build.es5.sh",
+    "watch": "tsc -w",
+    "prepare": "husky install",
+    "prepublishOnly": "npm run build-es2015 && npm run build-es5 && npm run build-esnext"
+  },
+  "author": "Gaggun Chaggar",
+  "license": "MIT",
+  "devDependencies": {
+    "@swc-node/jest": "^1.4.3",
+    "@types/jest": "^27.4.0",
+    "husky": "^7.0.4",
+    "jest": "^27.4.7",
+    "jsdom": "^16.7.0",
+    "lint-staged": "^12.1.7",
+    "prettier": "2.5.1",
+    "typescript": "4.5.4"
+  },
+  "lint-staged": {
+    "*.{ts}": "prettier --write src/**/*.ts"
+  }
+}
