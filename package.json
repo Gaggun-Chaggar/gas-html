@@ -1,13 +1,13 @@
 {
   "name": "gas-html",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "A lightweight library for creating html elements, compatable with node and the browser",
   "main": "dist/esnext/index.js",
   "esnext": "dist/esnext/index.js",
   "module": "dist/esnext/index.js",
   "types": "dist/esnext/index.d.ts",
   "files": [
-    "./dist"
+    "dist/*"
   ],
   "scripts": {
     "test": "jest",
