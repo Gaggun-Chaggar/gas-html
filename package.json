@@ -19,6 +19,17 @@
     "prepare": "husky install",
     "prepublishOnly": "npm run build-es2015 && npm run build-es5 && npm run build-esnext"
   },
+  "keywords": [
+    "components",
+    "html",
+    "createElement",
+    "browser",
+    "node",
+    "node.js",
+    "es2015",
+    "es5",
+    "esnext"
+  ],
   "author": "Gaggun Chaggar",
   "license": "MIT",
   "devDependencies": {
