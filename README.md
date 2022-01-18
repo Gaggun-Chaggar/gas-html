@@ -4,6 +4,37 @@ gas-html is a small library for easy creation and updating of HTMLElements.
 This project has been created to help provide an easier syntax for creating elements in small web projects.
 The core of gas-html is the `h` function which can be used to create elements with attributes, classes and styles. This library also exposes methods for standard html tags.
 
+## Installation
+
+For Node:
+
+```
+npm i gas-html
+```
+
+For Browser Module:
+`unpkg.com/gas-html@0.0.1/dist/es2015/index.js`
+
+```html
+<script
+  type="module"
+  src="unpkg.com/gas-html@0.0.1/dist/es2015/index.js"
+></script>
+```
+
+or
+
+```js
+import {h, span,...} from 'unpkg.com/gas-html@0.0.1/dist/es2015/index.js'
+```
+
+For Browser with Module Syntax:
+`unpkg.com/gas-html@0.0.1/dist/es5/index.js`
+
+```html
+<script src="unpkg.com/gas-html@0.0.1/dist/es5/index.js"></script>
+```
+
 ## Basic Syntax
 
 The `h` function is a curried function. The first call expects either a string for a html tag, or an existing `HTMLElement`. The second call expects classes, styles and attributes. The third call expects children.

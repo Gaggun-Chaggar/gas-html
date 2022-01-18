@@ -1,7 +1,7 @@
 {
-  "name": "component-creator",
-  "version": "1.0.0",
-  "description": "",
+  "name": "gas-html",
+  "version": "0.0.1",
+  "description": "A lightweight library for creating html elements, compatable with node and the browser",
   "main": "dist/esnext/index.js",
   "esnext": "dist/esnext/index.js",
   "module": "dist/esnext/index.js",
