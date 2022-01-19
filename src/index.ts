@@ -32,13 +32,12 @@ const createClass = (cls: Class): string => {
 const setAttrs = (el: HTMLElement, attrs: Attrs) => {
   Object.entries(attrs).forEach(([key, value]) => {
     el.setAttribute(key, String(value));
-    switch (typeof value) {
-    }
   });
 };
 const setStyle = (el: HTMLElement, style: Style) => {
   Object.entries(style).forEach(([key, value]) => {
-    el.style.setProperty(key, String(value));
+    //@ts-ignore
+    el.style[key] = String(value);
   });
 };
 
