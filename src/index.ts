@@ -1,4 +1,4 @@
-export type Maybe<T> = T | undefined | null;
+type Maybe<T> = T | undefined | null;
 type PartialRecord<K extends keyof any, T> = {
   [P in K]?: T;
 };
@@ -6,11 +6,12 @@ type PartialRecord<K extends keyof any, T> = {
 export type Class = Maybe<string> | Maybe<string>[] | Record<string, any>;
 export type Style = PartialRecord<keyof CSSStyleDeclaration, any>;
 export type Attrs = Record<string, any>;
+export type Child = Element | RenderFn | RenderOptsFn | string;
+export type Children = Child[];
 
-type RenderFn = (...children: Children) => HTMLElement;
-type RenderOptsFnParams = { cls?: Class; style?: Style; attrs?: Attrs };
-type RenderOptsFn = (args?: RenderOptsFnParams) => RenderFn;
-export type Children = (Element | RenderFn | RenderOptsFn | string)[];
+export type RenderFn = (...children: Children) => HTMLElement;
+export type RenderOptsFnParams = { cls?: Class; style?: Style } & Attrs;
+export type RenderOptsFn = (args?: RenderOptsFnParams) => RenderFn;
 
 const createClass = (cls: Class): string => {
   if (typeof cls === "string") {
@@ -70,17 +71,19 @@ export const h =
   (...children) => {
     const el = typeof tag === "string" ? document.createElement(tag) : tag;
 
-    if (params.attrs) {
-      setAttrs(el, params.attrs);
+    const { style, cls, ...attrs } = params;
+
+    if (attrs) {
+      setAttrs(el, attrs);
     }
 
-    if (params.style) {
-      setStyle(el, params.style);
+    if (style) {
+      setStyle(el, style);
     }
 
-    if (params.cls) {
-      const classStr = createClass(params.cls);
-      if (classStr !== "") el.className = createClass(params.cls);
+    if (cls) {
+      const classStr = createClass(cls);
+      if (classStr !== "") el.className = createClass(cls);
     }
 
     if (children) {

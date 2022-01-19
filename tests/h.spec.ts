@@ -81,13 +81,11 @@ describe("h", () => {
     expect(span.classList.contains("str-class-2")).toBe(true);
   });
 
-  it("should add attrs", () => {
+  it("should add other attributes", () => {
     const span = h("span")({
-      attrs: {
-        id: "id",
-        disabled: true,
-        rows: 6,
-      },
+      id: "id",
+      disabled: true,
+      rows: 6,
     })();
 
     expect(span.id).toBe("id");
