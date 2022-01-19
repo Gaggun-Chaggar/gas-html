@@ -36,8 +36,7 @@ const setAttrs = (el: HTMLElement, attrs: Attrs) => {
 };
 const setStyle = (el: HTMLElement, style: Style) => {
   Object.entries(style).forEach(([key, value]) => {
-    //@ts-ignore
-    el.style[key] = String(value);
+    el.style[key as any] = String(value);
   });
 };
 
