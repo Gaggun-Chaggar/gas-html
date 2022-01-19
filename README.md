@@ -35,7 +35,7 @@ For Browser without ES Modules:
 <script src="unpkg.com/gas-html@latest/dist/es5/index.js"></script>
 ```
 
-Or you can always copy the code from unpkg and edit to your needs.
+You can always copy the code from unpkg or github and edit to your needs.
 
 ## Basic Syntax
 
@@ -44,11 +44,9 @@ This js
 
 ```js
 import { h } from "gas-html";
-const myDiv = h("div")({
-  attrs: { id: "id" },
-  style: { minHeight: "10vh" },
-  cls: "my-class",
-})(h("span")()("some content"));
+const myDiv = h("div")({ id: "id", style: { minHeight: "10vh" }, cls: "my-class"})(
+    h("span")()("some content")
+  );
 ```
 
 generates the following html:
@@ -63,11 +61,9 @@ As mentioned, the library exports common html tags, so instead of using `h('span
 
 ```js
 import { div, span } from "gas-html";
-const myDiv = div({
-  attrs: { id: "id" },
-  style: { minHeight: "10vh" },
-  cls: "my-class",
-})(span()("some content"));
+const myDiv = div({ id: "id", style: { minHeight: "10vh" }, cls: "my-class"})(
+    span()("some content")
+  );
 ```
 
 ## Classes
@@ -106,8 +102,8 @@ const createTable = () =>
     ),
     tbody()(
       tr()(
-        td({ attrs: { "data-key": 1 } })("Body 1"),
-        td({ attrs: { "data-key": 2 } })("Body 2"),
+        td({ "data-key": 1 })("Body 1"), 
+        td({ "data-key": 2 })("Body 2")
       ),
     ),
   );
@@ -121,11 +117,16 @@ import { table, thead, tr, th, tbody, td } from "gas-html";
 const myTh = th({ class: "my-th", style: { fontWeight: "bold" } });
 const createTable = () =>
   table({ cls: "my-table" })(
-    thead()(tr()(myTh("Heading 1"), myTh("Heading 2"))),
+    thead()(
+      tr()(
+        myTh("Heading 1"), 
+        myTh("Heading 2")
+      )
+    ),
     tbody()(
       tr()(
-        td({ attrs: { "data-key": 1 } })("Body 1"),
-        td({ attrs: { "data-key": 2 } })("Body 2"),
+        td({ "data-key": 1 })("Body 1"), 
+        td({ "data-key": 2 })("Body 2")
       ),
     ),
   );
