@@ -35,6 +35,8 @@ For Browser without ES Modules:
 <script src="unpkg.com/gas-html@latest/dist/es5/index.js"></script>
 ```
 
+Or you can always copy the code from unpkg and edit to your needs.
+
 ## Basic Syntax
 
 The `h` function is a curried function. The first call expects either a string for a html tag, or an existing `HTMLElement`. The second call expects classes, styles and attributes. The third call expects children.
