@@ -28,7 +28,7 @@ or
 import {h, span,...} from 'unpkg.com/gas-html@latest/dist/es2015/index.js'
 ```
 
-For Browser with Module Syntax:
+For Browser without ES Modules:
 `unpkg.com/gas-html@latest/dist/es5/index.js`
 
 ```html
