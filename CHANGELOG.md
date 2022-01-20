@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v1.0.1
+
+- Updated errors in examples in README. (class -> cls).
+
 ## v1.0.0
 
 - Changelog added
