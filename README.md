@@ -44,9 +44,11 @@ This js
 
 ```js
 import { h } from "gas-html";
-const myDiv = h("div")({ id: "id", style: { minHeight: "10vh" }, cls: "my-class"})(
-    h("span")()("some content")
-  );
+const myDiv = h("div")({
+  id: "id",
+  style: { minHeight: "10vh" },
+  cls: "my-class",
+})(h("span")()("some content"));
 ```
 
 generates the following html:
@@ -61,9 +63,9 @@ As mentioned, the library exports common html tags, so instead of using `h('span
 
 ```js
 import { div, span } from "gas-html";
-const myDiv = div({ id: "id", style: { minHeight: "10vh" }, cls: "my-class"})(
-    span()("some content")
-  );
+const myDiv = div({ id: "id", style: { minHeight: "10vh" }, cls: "my-class" })(
+  span()("some content"),
+);
 ```
 
 ## Classes
@@ -101,10 +103,7 @@ const createTable = () =>
       ),
     ),
     tbody()(
-      tr()(
-        td({ "data-key": 1 })("Body 1"), 
-        td({ "data-key": 2 })("Body 2")
-      ),
+      tr()(td({ "data-key": 1 })("Body 1"), td({ "data-key": 2 })("Body 2")),
     ),
   );
 ```
@@ -114,20 +113,12 @@ const createTable = () =>
 ```js
 import { table, thead, tr, th, tbody, td } from "gas-html";
 
-const myTh = th({ class: "my-th", style: { fontWeight: "bold" } });
+const myTh = th({ cls: "my-th", style: { fontWeight: "bold" } });
 const createTable = () =>
   table({ cls: "my-table" })(
-    thead()(
-      tr()(
-        myTh("Heading 1"), 
-        myTh("Heading 2")
-      )
-    ),
+    thead()(tr()(myTh("Heading 1"), myTh("Heading 2"))),
     tbody()(
-      tr()(
-        td({ "data-key": 1 })("Body 1"), 
-        td({ "data-key": 2 })("Body 2")
-      ),
+      tr()(td({ "data-key": 1 })("Body 1"), td({ "data-key": 2 })("Body 2")),
     ),
   );
 ```
@@ -136,11 +127,11 @@ const createTable = () =>
 
 ```js
 import { span, h } from "gas-html";
-const myIEl = i({ class: "fas fa-spinner" })();
-h(myIEl)({ class: "fas fa-exclamation-triangle" })();
+const myIEl = i({ cls: "fas fa-spinner" })();
+h(myIEl)({ cls: "fas fa-exclamation-triangle" })();
 
 const myOtherEl = document.createElement("h1");
-h(myOtherEl)({ class: "this-works-too" })();
+h(myOtherEl)({ cls: "this-works-too" })();
 
 // add children to an existing element
 h(myOtherEl)()(img({ src: "/dog.png" }), span()("Title"));
