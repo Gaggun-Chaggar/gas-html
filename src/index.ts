@@ -86,7 +86,7 @@ export const h =
       if (classStr !== "") el.className = createClass(cls);
     }
 
-    if (children) {
+    if (children && children.length > 0) {
       removeChildren(el);
       setChildren(el, children);
     }
