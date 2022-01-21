@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v1.0.2
+
+- Fixed an issue where children of an element would be removed if updated with `h`.
+
 ## v1.0.1
 
 - Updated errors in examples in README. (class -> cls).
