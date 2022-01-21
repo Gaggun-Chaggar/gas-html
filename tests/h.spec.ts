@@ -107,4 +107,12 @@ describe("h", () => {
     expect(span.children.length).toBe(1);
     expect(span.firstElementChild.tagName).toBe("H1");
   });
+
+  it("should not remove existing children if update an element without new children", () => {
+    const span = h("span")()(h("div"));
+
+    h(span)({ cls: "new-class" })();
+    expect(span.children.length).toBe(1);
+    expect(span.firstElementChild.tagName).toBe("DIV");
+  });
 });

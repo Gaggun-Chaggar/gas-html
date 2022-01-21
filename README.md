@@ -126,7 +126,7 @@ const createTable = () =>
 ### Update an existing element
 
 ```js
-import { span, h } from "gas-html";
+import { span, img, h } from "gas-html";
 const myIEl = i({ cls: "fas fa-spinner" })();
 h(myIEl)({ cls: "fas fa-exclamation-triangle" })();
 
