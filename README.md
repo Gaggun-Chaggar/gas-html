@@ -136,3 +136,23 @@ h(myOtherEl)({ cls: "this-works-too" })();
 // add children to an existing element
 h(myOtherEl)()(img({ src: "/dog.png" }), span()("Title"));
 ```
+
+### Registering Events using 'on'
+
+```js
+import { btn, h } from "gas-html";
+const myBtn = btn({
+  on: {
+    click: (e) => {
+      console.log("Clicked", e);
+    },
+  },
+})("My Button");
+
+// remove event listener
+h(myBtn)({
+  on: {
+    click: undefined,
+  },
+})();
+```

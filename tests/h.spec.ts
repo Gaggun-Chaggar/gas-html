@@ -115,4 +115,61 @@ describe("h", () => {
     expect(span.children.length).toBe(1);
     expect(span.firstElementChild.tagName).toBe("DIV");
   });
+
+  it("should add events to element", () => {
+    let testRes = "";
+    const onClick = () => {
+      testRes = "Clicked";
+    };
+    const btn = h("button")({
+      on: {
+        click: onClick,
+      },
+    })("Button");
+    btn.click();
+
+    expect(testRes).toBe("Clicked");
+  });
+
+  it("should replace event with new event", () => {
+    let testRes = "";
+    let testResTwo = "";
+    const onClick = () => {
+      testRes += "Clicked";
+    };
+    const onClickTwo = () => {
+      testResTwo += "Clicked";
+    };
+
+    // first event trigger
+    const btn = h("button")({
+      on: {
+        click: onClick,
+      },
+    })("Button");
+    btn.click();
+    expect(testRes).toBe("Clicked");
+
+    // new event
+    h(btn)({
+      on: {
+        click: onClickTwo,
+      },
+    })();
+    // trigger new event
+    btn.click();
+    expect(testRes).toBe("Clicked");
+    expect(testResTwo).toBe("Clicked");
+
+    // remove event
+    h(btn)({
+      on: {
+        click: undefined,
+      },
+    })();
+    btn.click();
+    // values should stay the same
+    expect(testRes).toBe("Clicked");
+    expect(testResTwo).toBe("Clicked");
+  });
 });

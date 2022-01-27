@@ -3,15 +3,26 @@ type PartialRecord<K extends keyof any, T> = {
   [P in K]?: T;
 };
 
+export type GasElement = HTMLElement & { _gasListeners?: EventMap };
 export type Class = Maybe<string> | Maybe<string>[] | Record<string, any>;
 export type Style = PartialRecord<keyof CSSStyleDeclaration, any>;
 export type Attrs = Record<string, any>;
 export type Child = Element | RenderFn | RenderOptsFn | string;
 export type Children = Child[];
+export type EventMap = PartialRecord<
+  keyof HTMLElementEventMap,
+  EventListenerOrEventListenerObject
+>;
 
-export type RenderFn = (...children: Children) => HTMLElement;
-export type RenderOptsFnParams = { cls?: Class; style?: Style } & Attrs;
+export type RenderFn = (...children: Children) => GasElement;
+export type RenderOptsFnParams = {
+  cls?: Class;
+  style?: Style;
+  on?: EventMap;
+} & Attrs;
 export type RenderOptsFn = (args?: RenderOptsFnParams) => RenderFn;
+
+const entries = <T>(o: T) => Object.entries(o) as [keyof T, T[keyof T]][];
 
 const createClass = (cls: Class): string => {
   if (typeof cls === "string") {
@@ -25,23 +36,23 @@ const createClass = (cls: Class): string => {
     return "";
   }
 
-  return Object.entries(cls)
+  return entries(cls)
     .map(([key, value]) => (value ? key : ""))
     .join(" ");
 };
 
-const setAttrs = (el: HTMLElement, attrs: Attrs) => {
-  Object.entries(attrs).forEach(([key, value]) => {
+const setAttrs = (el: GasElement, attrs: Attrs) => {
+  entries(attrs).forEach(([key, value]) => {
     el.setAttribute(key, String(value));
   });
 };
-const setStyle = (el: HTMLElement, style: Style) => {
-  Object.entries(style).forEach(([key, value]) => {
+const setStyle = (el: GasElement, style: Style) => {
+  entries(style).forEach(([key, value]) => {
     el.style[key as any] = String(value);
   });
 };
 
-const setChildren = (el: HTMLElement, children: Children) => {
+const setChildren = (el: GasElement, children: Children) => {
   children.forEach((c) => {
     switch (typeof c) {
       case "string":
@@ -65,13 +76,27 @@ const removeChildren = (el: ChildNode) => {
   }
 };
 
+const addEvents = (el: GasElement, events: EventMap) => {
+  entries(events).forEach(([e, f]) => {
+    if (!el._gasListeners) {
+      el._gasListeners = {};
+    }
+    if (el._gasListeners[e]) {
+      el.removeEventListener(e, el._gasListeners[e]!, false);
+    }
+    el._gasListeners[e] = f;
+    el.addEventListener(e, f!, false);
+  });
+};
+
 export const h =
-  (tag: string | HTMLElement): RenderOptsFn =>
+  (tag: string | HTMLElement | GasElement): RenderOptsFn =>
   (params = {}) =>
   (...children) => {
-    const el = typeof tag === "string" ? document.createElement(tag) : tag;
+    const el: GasElement =
+      typeof tag === "string" ? document.createElement(tag) : tag;
 
-    const { style, cls, ...attrs } = params;
+    const { style, cls, on, ...attrs } = params;
 
     if (attrs) {
       setAttrs(el, attrs);
@@ -84,6 +109,10 @@ export const h =
     if (cls) {
       const classStr = createClass(cls);
       if (classStr !== "") el.className = createClass(cls);
+    }
+
+    if (on) {
+      addEvents(el, on);
     }
 
     if (children && children.length > 0) {
