@@ -10,6 +10,10 @@
  */
 
 /**
+ * @typedef {HTMLElement & { _gasListeners?: EventMap }} GasElement
+ */
+
+/**
  * @typedef {Maybe<string> | Maybe<string>[] | Record<string, any>} Class
  */
 
@@ -30,11 +34,15 @@
  */
 
 /**
- * @typedef {(...children:Children) => HTMLElement} RenderFn
+ * @typedef {PartialRecord<keyof HTMLElementEventMap, EventListenerOrEventListenerObject>} EventMap
  */
 
 /**
- * @typedef {{ cls?: Class; style?: Style } & Attrs} RenderOptsFnParams
+ * @typedef {(...children:Children) => GasElement} RenderFn
+ */
+
+/**
+ * @typedef {{ cls?: Class; style?: Style, on?: EventMap } & Attrs} RenderOptsFnParams
  */
 
 /**
@@ -42,5 +50,5 @@
  */
 
 /**
- * @typedef {(tag: string | HTMLElement) => RenderOptsFn} H
+ * @typedef {(tag: string | HTMLElement | GasElement) => RenderOptsFn} H
  */
