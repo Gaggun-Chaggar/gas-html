@@ -156,3 +156,23 @@ h(myBtn)({
   },
 })();
 ```
+
+### Create a 'component' with 'props'
+
+```js
+import { button, h, div } from "./index.js";
+const MyBtn = (props) =>
+  button({
+    on: {
+      click: (e) => props.onClick(props, e),
+    },
+  })(props.name);
+
+const myCounter = MyBtn({
+  name: "1",
+  onClick: (props) => {
+    props.name++;
+    h(myCounter)()(props.name);
+  },
+});
+```

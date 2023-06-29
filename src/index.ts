@@ -3,26 +3,29 @@ type PartialRecord<K extends keyof any, T> = {
   [P in K]?: T;
 };
 
-export type GasElement = HTMLElement & { _gasListeners?: EventMap };
-export type Class = Maybe<string> | Maybe<string>[] | Record<string, any>;
+export type GasElement = HTMLElement & {
+  _gasListeners?: PartialRecord<keyof HTMLElementEventMap, EventListener>;
+  gas?: RenderOptsFnParams;
+};
+export type Class =
+  | Maybe<string>
+  | Maybe<string[]>
+  | Maybe<Record<string, any>>;
 export type Style = PartialRecord<keyof CSSStyleDeclaration, any>;
 export type Attrs = Record<string, any>;
 export type Child = Element | RenderFn | RenderOptsFn | string;
 export type Children = Child[];
-export type EventMap = PartialRecord<
-  keyof HTMLElementEventMap,
-  EventListenerOrEventListenerObject
->;
-
+export type EventMap = PartialRecord<keyof HTMLElementEventMap, EventListener>;
 export type RenderFn = (...children: Children) => GasElement;
 export type RenderOptsFnParams = {
   cls?: Class;
   style?: Style;
   on?: EventMap;
 } & Attrs;
-export type RenderOptsFn = (args?: RenderOptsFnParams) => RenderFn;
+export type RenderOptsFn = (params?: RenderOptsFnParams) => RenderFn;
 
-const entries = <T>(o: T) => Object.entries(o) as [keyof T, T[keyof T]][];
+const entries = <T extends {}>(o: T) =>
+  Object.entries(o) as [keyof T, T[keyof T]][];
 
 const createClass = (cls: Class): string => {
   if (typeof cls === "string") {
@@ -41,15 +44,28 @@ const createClass = (cls: Class): string => {
     .join(" ");
 };
 
+const setClass = (el: GasElement, val: Class) => {
+  const classStr = createClass(val);
+  if (classStr !== "") el.className = createClass(val);
+};
+
 const setAttrs = (el: GasElement, attrs: Attrs) => {
   entries(attrs).forEach(([key, value]) => {
     el.setAttribute(key, String(value));
   });
 };
-const setStyle = (el: GasElement, style: Style) => {
-  entries(style).forEach(([key, value]) => {
-    el.style[key as any] = String(value);
-  });
+
+const setStyle = (el: GasElement, style: Style | undefined) => {
+  const length = el.style.length;
+  for (let i = 0; i < length; i++) {
+    const key = el.style[i];
+    el.style[key as any] = "";
+  }
+  if (style) {
+    entries(style).forEach(([key, value]) => {
+      el.style[key as any] = String(value);
+    });
+  }
 };
 
 const setChildren = (el: GasElement, children: Children) => {
@@ -76,16 +92,34 @@ const removeChildren = (el: ChildNode) => {
   }
 };
 
+const addEvent = (
+  el: GasElement,
+  e: keyof HTMLElementEventMap,
+  f: EventListener,
+) => {
+  if (!el._gasListeners) {
+    el._gasListeners = {};
+  }
+  if (el._gasListeners[e]) {
+    el.removeEventListener(e, el._gasListeners[e]!, false);
+  }
+
+  if (f) {
+    el._gasListeners[e] = f;
+    el.addEventListener(e, f, false);
+  }
+};
+
+const clearEvents = (el: GasElement) => {
+  entries(el._gasListeners || {}).forEach(([e, f]) => {
+    if (!f) return;
+    el.removeEventListener(e, f, false);
+  });
+};
+
 const addEvents = (el: GasElement, events: EventMap) => {
   entries(events).forEach(([e, f]) => {
-    if (!el._gasListeners) {
-      el._gasListeners = {};
-    }
-    if (el._gasListeners[e]) {
-      el.removeEventListener(e, el._gasListeners[e]!, false);
-    }
-    el._gasListeners[e] = f;
-    el.addEventListener(e, f!, false);
+    addEvent(el, e, f!);
   });
 };
 
@@ -96,24 +130,105 @@ export const h =
     const el: GasElement =
       typeof tag === "string" ? document.createElement(tag) : tag;
 
+    if (!params.style) {
+      params.style = {};
+    }
+    if (!params.cls) {
+      params.cls = {};
+    }
+    if (!params.on) {
+      params.on = {};
+    }
     const { style, cls, on, ...attrs } = params;
 
-    if (attrs) {
-      setAttrs(el, attrs);
-    }
+    params._cls = typeof cls === "string" ? cls.split(" ") : cls;
+    params._style = style;
+    params._on = on;
 
-    if (style) {
-      setStyle(el, style);
-    }
+    Object.defineProperties(params, {
+      cls: {
+        get() {
+          return this._cls;
+        },
+        set(val) {
+          this._cls = val;
+          setClass(el, val);
+        },
+        enumerable: true,
+      },
+      style: {
+        get() {
+          return this._style;
+        },
+        set(val) {
+          this._style = val;
+          setStyle(el, val);
+        },
+        enumerable: true,
+      },
+      on: {
+        get() {
+          return this._on;
+        },
+        set(val) {
+          this._on = val;
+          clearEvents(el);
+          addEvents(el, val);
+        },
+        enumerable: true,
+      },
+    });
 
-    if (cls) {
-      const classStr = createClass(cls);
-      if (classStr !== "") el.className = createClass(cls);
-    }
+    params._style = new Proxy(params._style as Style, {
+      set(_, prop: any, val) {
+        el.style[prop] = val;
+        return true;
+      },
+    });
 
-    if (on) {
-      addEvents(el, on);
-    }
+    params._cls = new Proxy(params._cls as Record<string, any>, {
+      set(target, prop: string, val) {
+        if (target[prop] && !val) {
+          el.classList.remove(prop);
+          return true;
+        } else if (val && !target[prop]) {
+          el.classList.add(prop);
+          return true;
+        }
+        return false;
+      },
+    });
+
+    params._on = new Proxy(params._on as EventMap, {
+      set(target, prop: keyof HTMLElementEventMap, val) {
+        if (!val && target[prop]) {
+          addEvent(el, prop, val);
+          return true;
+        }
+        return false;
+      },
+    });
+
+    entries(attrs).forEach(([k, v]) => {
+      params["_" + k] = v;
+      Object.defineProperty(params, k, {
+        get() {
+          return this["_" + k];
+        },
+        set(v: string) {
+          this["_" + k] = v;
+          el.setAttribute(String(k), v);
+        },
+        enumerable: true,
+      });
+    });
+
+    setAttrs(el, attrs);
+    setStyle(el, style);
+    setClass(el, cls);
+    addEvents(el, on);
+
+    el.gas = params;
 
     if (children && children.length > 0) {
       removeChildren(el);
