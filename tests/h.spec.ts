@@ -12,7 +12,7 @@ describe("h", () => {
 
     expect(span.tagName).toBe("SPAN");
     expect(span.children.length).toBe(1);
-    expect(span.firstElementChild.tagName).toBe("DIV");
+    expect(span.firstElementChild?.tagName).toBe("DIV");
   });
 
   it("should create an element with child from render fn", () => {
@@ -20,7 +20,7 @@ describe("h", () => {
 
     expect(span.tagName).toBe("SPAN");
     expect(span.children.length).toBe(1);
-    expect(span.firstElementChild.tagName).toBe("DIV");
+    expect(span.firstElementChild?.tagName).toBe("DIV");
   });
 
   it("should create a an element with child from string", () => {
@@ -34,7 +34,7 @@ describe("h", () => {
 
     expect(span.tagName).toBe("SPAN");
     expect(span.children.length).toBe(1);
-    expect(span.firstElementChild.tagName).toBe("DIV");
+    expect(span.firstElementChild?.tagName).toBe("DIV");
   });
 
   it("should create an element with multiple children", () => {
@@ -105,7 +105,7 @@ describe("h", () => {
 
     h(span)()(h("h1"));
     expect(span.children.length).toBe(1);
-    expect(span.firstElementChild.tagName).toBe("H1");
+    expect(span.firstElementChild?.tagName).toBe("H1");
   });
 
   it("should not remove existing children if update an element without new children", () => {
@@ -113,7 +113,34 @@ describe("h", () => {
 
     h(span)({ cls: "new-class" })();
     expect(span.children.length).toBe(1);
-    expect(span.firstElementChild.tagName).toBe("DIV");
+    expect(span.firstElementChild?.tagName).toBe("DIV");
+  });
+
+  it("show work with proxy", () => {
+    const component = (id) => {
+      const onClick = (event) => {
+        event.target.gas.id = "newId";
+        event.target.gas.style = undefined;
+        event.target.gas.cls = { newnew: true, booboo: true };
+      };
+      const p = {
+        cls: "new-class",
+        style: { fontSize: "12px" },
+        id: id,
+        on: { click: onClick },
+      };
+      const span = h("span")(p)(h("div"));
+      return span;
+    };
+
+    const span = component("12");
+    expect(span.id).toBe("12");
+    expect(span.className).toBe("new-class");
+    expect(span.style.fontSize).toBe("12px");
+    span.click();
+    expect(span.id).toBe("newId");
+    expect(span.className).toBe("newnew booboo");
+    expect(span.style.fontSize).toBe("");
   });
 
   it("should add events to element", () => {
